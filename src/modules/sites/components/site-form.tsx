@@ -1,0 +1,87 @@
+'use client'
+
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+
+import { Button } from '@/components/ui/button'
+import { Form } from '@/components/ui/form'
+import {
+  insertSiteSchema,
+  insertSiteSchemaType,
+  selectSiteSchemaType
+} from '@/zod-schemas/site'
+import { InputWithLabel } from '@/components/inputs/input-with-label'
+import { TextAreaWithLabel } from '@/components/inputs/text-area-with-label'
+
+type Props = {
+  site?: selectSiteSchemaType
+}
+
+export const SiteForm = ({ site }: Props) => {
+  const defaultValues: insertSiteSchemaType = {
+    id: site?.id ?? 0,
+    name: site?.name ?? '',
+    subdirectory: site?.subdirectory ?? ''
+  }
+
+  const form = useForm<insertSiteSchemaType>({
+    mode: 'onBlur',
+    resolver: zodResolver(insertSiteSchema),
+    defaultValues
+  })
+
+  async function submitForm(data: insertSiteSchemaType) {
+    console.log(data)
+  }
+  return (
+    <div className='h-dvh w-full rounded-md bg-gray-100'>
+      <div className='mx-auto mt-24 flex max-w-[500px] flex-col rounded-sm bg-white p-2'>
+        <div className='mb-4'>
+          <h2 className='text-primary text-2xl font-bold'>
+            {site?.id ? 'Edit' : 'New'} Site Form
+          </h2>
+        </div>
+        <Form {...form}>
+          <form className='space-y-1' onSubmit={form.handleSubmit(submitForm)}>
+            <InputWithLabel<insertSiteSchemaType>
+              fieldTitle='Name'
+              nameInSchema='name'
+            />
+
+            <TextAreaWithLabel<insertSiteSchemaType>
+              fieldTitle='Description'
+              nameInSchema='description'
+            />
+
+            <InputWithLabel<insertSiteSchemaType>
+              fieldTitle='Sub Directory'
+              nameInSchema='subdirectory'
+            />
+
+            {/* <Button type='submit'>Save</Button> */}
+            <div className='mt-4 flex items-center justify-between space-x-4'>
+              <Button
+                type='submit'
+                size='lg'
+                disabled={form.formState.isSubmitting}
+                className='button col-span-2'
+              >
+                {form.formState.isSubmitting ? 'Submitting' : 'Save'}
+              </Button>
+              <Button
+                type='button'
+                size='lg'
+                variant='outline'
+                title='Reset'
+                onClick={() => form.reset(defaultValues)}
+                className='border-red-500 text-red-500'
+              >
+                Reset
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </div>
+    </div>
+  )
+}
