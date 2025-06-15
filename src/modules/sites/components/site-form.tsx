@@ -25,7 +25,8 @@ export const SiteForm = ({ site }: Props) => {
   const defaultValues: insertSiteSchemaType = {
     id: site?.id ?? 0,
     name: site?.name ?? '',
-    subdirectory: site?.subdirectory ?? ''
+    subdirectory: site?.subdirectory ?? '',
+    active: site?.active ?? true
   }
 
   const form = useForm<insertSiteSchemaType>({
