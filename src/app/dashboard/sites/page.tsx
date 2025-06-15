@@ -4,6 +4,18 @@ import { SiteForm } from '@/modules/sites/components/site-form'
 
 import React from 'react'
 
+export async function generateMetadata({
+  searchParams
+}: {
+  searchParams: Promise<{ [key: string]: string | undefined }>
+}) {
+  const { siteId } = await searchParams
+
+  if (!siteId) return { title: 'New Site' }
+
+  return { title: `Edit Site #${siteId}` }
+}
+
 const SitesPage = async ({
   searchParams
 }: {

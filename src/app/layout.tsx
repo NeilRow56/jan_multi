@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    template: `%s | Computer Repair Shop`,
+    template: `%s | Multi eccommerce`,
     default: APP_NAME
   },
   description: APP_DESCRIPTION

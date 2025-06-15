@@ -2,7 +2,7 @@
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import {
@@ -12,12 +12,16 @@ import {
 } from '@/zod-schemas/site'
 import { InputWithLabel } from '@/components/inputs/input-with-label'
 import { TextAreaWithLabel } from '@/components/inputs/text-area-with-label'
+import { CheckboxWithLabel } from '@/components/inputs/checkbox-with-label'
 
 type Props = {
   site?: selectSiteSchemaType
 }
 
 export const SiteForm = ({ site }: Props) => {
+  const { getPermission, isLoading } = useKindeBrowserClient()
+  const isManager = !isLoading && getPermission('manager')?.isGranted
+
   const defaultValues: insertSiteSchemaType = {
     id: site?.id ?? 0,
     name: site?.name ?? '',
@@ -34,11 +38,11 @@ export const SiteForm = ({ site }: Props) => {
     console.log(data)
   }
   return (
-    <div className='h-dvh w-full rounded-md bg-gray-100'>
-      <div className='mx-auto mt-24 flex max-w-[500px] flex-col rounded-sm bg-white p-2'>
+    <div className='bg-background h-dvh w-full rounded-md'>
+      <div className='mx-auto mt-24 flex max-w-[500px] flex-col rounded-md border-2 p-4'>
         <div className='mb-4'>
           <h2 className='text-primary text-2xl font-bold'>
-            {site?.id ? 'Edit' : 'New'} Site Form
+            {site?.id ? 'Edit' : 'New'} Site {site?.id ? `#${site.id}` : 'Form'}
           </h2>
         </div>
         <Form {...form}>
@@ -57,6 +61,16 @@ export const SiteForm = ({ site }: Props) => {
               fieldTitle='Sub Directory'
               nameInSchema='subdirectory'
             />
+
+            {isLoading ? (
+              <p>Loading...</p>
+            ) : isManager && site?.id ? (
+              <CheckboxWithLabel<insertSiteSchemaType>
+                fieldTitle='Active'
+                nameInSchema='active'
+                message='Yes'
+              />
+            ) : null}
 
             {/* <Button type='submit'>Save</Button> */}
             <div className='mt-4 flex items-center justify-between space-x-4'>
