@@ -14,10 +14,11 @@ import { InputWithLabel } from '@/components/inputs/input-with-label'
 import { TextAreaWithLabel } from '@/components/inputs/text-area-with-label'
 import { CheckboxWithLabel } from '@/components/inputs/checkbox-with-label'
 import { useAction } from 'next-safe-action/hooks'
-import { saveSiteAction } from '../actions/site-actions'
+
 import { toast } from 'sonner'
 import { DisplayServerActionResponse } from '@/components/display-server-action-response'
 import { LoaderCircle } from 'lucide-react'
+import { saveSiteAction } from '@/modules/sites/actions/site-actions'
 
 type Props = {
   site?: selectSiteSchemaType

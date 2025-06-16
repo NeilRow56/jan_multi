@@ -1,53 +1,27 @@
-import { BackButton } from '@/components/dashboard/back-button'
-import { getSite } from '@/lib/queries/getSite'
-import { SiteForm } from '@/modules/sites/components/site-form'
+import { db } from '@/db'
+import { sites } from '@/db/schema'
+import SiteTable from '@/modules/sites/components/site-table'
 
-import React from 'react'
-
-export async function generateMetadata({
-  searchParams
-}: {
-  searchParams: Promise<{ [key: string]: string | undefined }>
-}) {
-  const { siteId } = await searchParams
-
-  if (!siteId) return { title: 'New Site' }
-
-  return { title: `Edit Site #${siteId}` }
+export const metadata = {
+  title: 'Customer Search'
 }
 
-const SitesPage = async ({
-  searchParams
-}: {
-  searchParams: Promise<{ [key: string]: string | undefined }>
-}) => {
-  try {
-    const { siteId } = await searchParams
+export default async function Sites() {
+  // const { searchText } = await searchParams
 
-    // Edit site form
-    if (siteId) {
-      const site = await getSite(parseInt(siteId))
+  const data = await db.select().from(sites)
 
-      if (!site) {
-        return (
-          <>
-            <h2 className='mb-2 text-2xl'>Site ID #{siteId} not found</h2>
-            <BackButton title='Go Back' variant='default' />
-          </>
-        )
-      }
-      console.log(site)
-      // put site dialog/form component
-      return <SiteForm site={site} />
-    } else {
-      // new site dialog/form component
-      return <SiteForm />
-    }
-  } catch (e) {
-    if (e instanceof Error) {
-      throw e
-    }
-  }
+  // if (!searchText) return <CustomerSearch />
+
+  // const results = await getCustomerSearchResults(searchText)
+
+  return (
+    <>
+      {data.length ? (
+        <SiteTable data={data} />
+      ) : (
+        <p className='mt-4'>No results found</p>
+      )}
+    </>
+  )
 }
-
-export default SitesPage
